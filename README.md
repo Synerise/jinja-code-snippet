@@ -2,7 +2,7 @@
 
 ## Installation
 For instruction regarding snippet installation in Visual Studio Code please refer https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets 
-For pasting code from [jinjava.jsonc](jinjava.jsonc) file
+In your snippet file paste code from [jinjava.jsonc](jinjava.jsonc) file
 
 ## How to use it
 1. Code snippets are templates that make it easier to enter repeating code patterns, such as loops or conditional-statements.  This snippet are global, so work with all language. You can use snippets in JavaScript, Jinjava Raw, HTML, CSS, or with any language choosen in VSC.
