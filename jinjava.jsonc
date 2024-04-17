@@ -1,0 +1,1739 @@
+{
+    // Place your wrksp workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+    // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+    // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+    // used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+    // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+    // Placeholders with the same ids are connected.
+    // Example:
+    // "Print to console": {
+    //  "scope": "javascript,typescript",
+    //  "prefix": "log",
+    //  "body": [a
+    //      "console.log('$1');",
+    //      "$2"
+    //  ],
+    //  "description": "Log output to console"
+    // }
+
+    "Set Variable": {
+		"prefix": ["set variable", "set value"],
+		"body": [
+			"{% set ${1:variable} = ${2:value} %}",
+			"{{ ${1:variable} }}"
+		],
+		"description": "Set Variable"
+	},
+
+	"Set Array": {
+		"prefix": "array",
+		"body": [
+			"{% set $1 = [$2] %}"
+		],
+		"description": "Set Array"
+	},
+
+	"Set Object": {
+		"prefix": "object",
+		"body": [
+			"{% set $1 = {'$2':'$3'} %}"
+		],
+		"description": "Set Object"
+	},
+
+	"Set Array With Object": {
+		"prefix": "array with object",
+		"body": [
+			"{% set $1 = [{'$2':'$3'}] %}"
+		],
+		"description": "Set array with object"
+	},
+
+	"Expression": {
+		"prefix": "expressionvar",
+		"body": [
+			"{% expressionvar ${1:expression-hash} %}",
+			"\t{{ expression_result }}",
+			"{% endexpressionvar %}"
+		],
+		"description": "Expression Block"
+	},
+		
+	"Expression Var": {
+		"prefix": "expressionvar",
+		"body": [
+			"{% expression %} ${1:expression-hash} {% endexpression %}"
+		],
+		"description": "Expressionvar Block"
+	},
+
+	"Aggregate": {
+		"prefix": "aggregate",
+		"body": [
+		"{% aggregate ${1:aggregate-hash} %}",
+			"\t{{ aggregate_result[0] }}",
+		"{% endaggregate %}"
+		],
+		"description": "Aggregate Block"
+	},
+
+	"Aggregate With For": {
+		"prefix": "aggregate with for",
+		"body": [
+		"{% aggregate ${1:aggregate-hash} %}",
+			"\t{%- for ${2:item} in aggregate_result -%}",
+			"\t\t{{ ${2:item} }}",
+			"\t{%- endfor -%}",
+		"{% endaggregate %}"
+		],
+		"description": "Aggregate Block with for"
+	},
+
+	"Recommendations Block": {
+		"prefix": "recommendations3",
+		"body": [
+			"{% recommendations3 campaignId=${1:recommendation-id} %}",
+				"\t{%- for ${2:item} in recommended_products3 -%}",
+					"\t\t{{ ${2:item }}}",
+					"\t\t{{ ${2:item}.itemId }}",
+				"\t{%- endfor -%}",
+			"{% endrecommendations3 %}"
+		],
+		"description": "Recommendations Block"
+	},
+
+	"Recommendations as JSON": {
+		"prefix": "recommendations3 as JSON",
+		"body": [
+			"{% recommendations_json3 campaignId=${1:recommendation-id} %}",
+			"{% endrecommendations_json3 %}"
+		],
+		"description": "Recommendations as JSON"
+	},
+
+	"Recommendations with item context": {
+		"prefix": "recommendations3 with item context",
+		"body": [
+			"{% set itemContext = [] %}",
+			"{% aggregate ${1:aggregate-hash} %}",
+				"\t{%- for r in aggregate_result|reverse -%}",
+					"\t\t{% set _noop = itemContext.append(r.sku) %}",
+				"\t{%- endfor -%}",
+			"{% endaggregate %}",
+			"",
+			"{% recommendations3 campaignId=${2:campaign-hash} itemsIds=itemContext %}",
+				"\t{%- for ${3:item} in recommended_products3 -%}",
+					"\t\t{{ ${3:item }}}",
+				"\t{%- endfor -%}",
+			"{% endrecommendations3 %}"
+		],
+		"description": "Recommendations with an item context"
+	},
+
+	"Recommendations with specific item context": {
+		"prefix": "recommendations3 with specific item context",
+		"body": [
+			"{% set itemContext = [] %}",
+			"{% set _noop = itemContext.append(${1:item-id})) %} // replace item-id with the value you need",
+			"{% recommendations3 campaignId=${2:campaign-hash} itemsIds=itemContext %}",
+				"\t{%- for ${3:item} in recommended_products3 -%}",
+					"\t\t{{ ${3:item }}}",
+				"\t{%- endfor -%}",
+			"{% endrecommendations3 %}"
+		],
+		"description": "Recommendations with an specific item context"
+	},
+
+	"Recommendations with filters": {
+		"prefix": "recommendations3 with filters",
+		"body": [
+			"{% set filters = \"param1=='value'ANDparam2!='value2'\" %}",
+			"{% set additionalParam = metric_additional_params['property_name'] %} // stores value of OG tag",
+			"{% set filters = \"param==\"' + additionalParam +'\" %} // adds value of OG tag to your filter",
+			"",
+			"{% recommendations3 campaignId=${1:campaign-hash} additionalFilters=filters filtersJoiner=AND %}",
+				"\t{%- for ${3:item} in recommended_products3 -%}",
+					"\t\t{{ ${3:item }}}",
+				"\t{%- endfor -%}",
+			"{% endrecommendations3 %}",
+			"",
+			"{% recommendations3 campaignId=${1:campaign-hash} additionalElasticFilters=filters elasticFiltersJoiner=AND %}",
+				"\t{%- for ${3:item} in recommended_products3 -%}",
+					"\t\t{{ ${3:item }}}",
+				"\t{%- endfor -%}",
+			"{% endrecommendations3 %}",
+			"",
+			"{% recommendations3 campaignId=${1:campaign-hash} additionalFilters=filters filtersJoiner=REPLACE %}",
+				"\t{%- for ${3:item} in recommended_products3 -%}",
+					"\t\t{{ ${3:item }}}",
+				"\t{%- endfor -%}",
+			"{% endrecommendations3 %}"
+		],
+		"description": "Recommendations with filters"
+	},
+
+	"Recommendations with slots": {
+		"prefix": "recommendations3 with slots",
+		"body": [
+			"{% recommendations3 campaignId=${1:insert_recommendation_ID} %}",
+				"\t{% for slot_products in slots_products3 %}",
+					"\t\t{{ slot_products.name }}",
+					"\t\t{% for item in slot_products.items %}",
+						"\t\t\t{{ item.itemId }}",
+					"\t\t{% endfor %}",
+					"\t\t{% for row in slot_products.rows %}", 
+						"\t\t\t{{ row.attributeValue }}",
+						"\t\t\t{{ row.items }}",
+					"\t\t{% endfor %}",
+				"\t{% endfor %}",
+			"{% endrecommendations3 %}"
+		],
+		"description": "Recommendations with slots"
+	},
+
+	"Dynamic content metric additional params": {
+		"prefix": "dynamic metric additional params",
+		"body": [
+			"{{ metric_additional_params[\"product:PARAM_NAME\"] }}"
+		],
+		"description": "To access the value of a product: meta tag's content attribute when creating dynamic content, use the following syntax"
+	},
+
+	"Dynamic content social proof": {
+		"prefix": "dynamic social proof",
+		"body": [
+			"{% socialproof %} ${1:metric-hash} {% endsocialproof %}"
+		],
+		"description": "Social proof tag"
+	},
+
+	"Email open in the browser": {
+		"prefix": "email open in the browser",
+		"body": [
+			"<a href=\"{{ synerise-open-in-browser }}\">Click to open the message in a browser</a>"
+		],
+		"description": "Generate a URL that opens the message in a browser."
+	},
+
+	"Email resign link": {
+		"prefix": "email resign link",
+		"body": [
+			"<a href=\"{{ synerise-resign-link }}\">Unsubscribe</a>"
+		],
+		"description": "Generate a URL that revokes the customer’s email communication agreement."
+	},
+
+	"Email preparelink": {
+		"prefix": "email preparelink",
+		"body": [
+			"{% set link = \"https://hub.synerise.com/\" %}",
+			"<a href=\"{% preparelink %}{{link}}{% endpreparelink %}\">Link text</a>"
+		],
+		"description": "If the email communication includes links, you can track their additional parameters (such as UTM) and click events."
+	},
+
+	"Webpush inserts": {
+		"prefix": "webpush insert",
+		"body": [
+			"{%- if false -%} withoutRedirect=1 {%- endif -%}"
+		],
+		"description": "Inserts can be used in all fields of the webpush definition. In the URL, Icon, and Image fields, if any jinjava is used, the following tag must be added at the end of the code of the field."
+	},
+
+	"Automation event parametrs": {
+		"prefix": "automation event parametrs",
+		"body": [
+			"{{ event.action }}",
+			"{{ event.params.sku }}"
+		],
+		"description": "Event parameters store additional information, such as og:tags. Some of them are required, but you can also create custom parameters. When you use the syntax below, the parameters are retrieved from the event that is the current context."
+	},
+
+	"Automation event context": {
+		"prefix": "automation event context",
+		"body": [
+			"{{ automationPathSteps['nodeName'].event.params.paramName }}",
+			"{{ automationPathSteps['nodeName'].event.params['paramName'] }}"
+		],
+		"description": "You can ignore the default context and refer to parameters of a specific Trigger or Event Filter node."
+	},
+
+	"Automation managing parameters with schemas": {
+		"prefix": "automation managing parameters with schemas",
+		"body": [
+			"{% context fieldId %}"
+		],
+		"description": "fieldId is the unique ID of the field, not the label used as the name of the column on the UI."
+	},
+
+	"Automation workflow metadata": {
+		"prefix": "automation workflow metadata",
+		"body": [
+			"{{currentStep.PROPERTYNAME}}"
+		],
+		"description": "You can insert properties of workflow and the current step (a step is the occurrence of a profile entering a node in the progress of a workflow)."
+	},
+	
+	"Automation audience node syntax limitations": {
+		"prefix": "automation audience node syntax limitations",
+		"body": [
+			"{% set arr = [] %}{% do arr.append('6678347477') %}{% do arr.append('4551874894')%}{{ arr | join('","') }}"
+		],
+		"description": "\"is forbidden as it will be misinterpreted by Jinja, use ' instead If you want to use the IN operator in the conditions to check if a string occurs in an array, you must join the array by using join('\",\"')"
+	},
+		
+	"Automation params": {
+		"prefix": "automation params from event",
+		"body": [
+			"{% set event = {params: {alertSku: 'wartosc' }}%}",
+			"{% set from_event = event.params.alertSku %}"
+		],
+		"description": "You can refer to event params in emails"
+	},
+
+	"Data transformation changing values": {
+		"prefix": "data transformation changing values",
+		"body": [
+			"root['columnName']"
+		],
+		"description": "You can replace the value in a column with another value."
+	},
+
+	"Data transformation change current value": {
+		"prefix": "data transformation change current value ",
+		"body": [
+			"{%- if root['paymentInfo'] == 'cash' -%}POS{%- else -%}WEB_DESKTOP{%- endif -%}"
+		],
+		"description": "The following snippet replaces the value of paymentInfo"
+	},
+
+	"Data transformation conditionally keep current value": {
+		"prefix": "data transformation conditionally keep current value ",
+		"body": [
+			"{%- if root['paymentInfo'] == 'cash' -%}{{root['paymentInfo']}}{%- else -%}WEB_DESKTOP{%- endif -%}"
+		],
+		"description": "The following snippet keeps cash as the value of paymentInfo, but replaces any other value with WEB_DESKTOP"
+	},
+
+	"Data transformation combine conditions": {
+		"prefix": "data transformation combine conditions ",
+		"body": [
+			"{%- if root['paymentInfo'] == 'cash' -%}POS{%- elif root['paymentInfo'] == 'online' -%}WEB_DESKTOP{%- else -%}UNKNOWN{%- endif -%}"
+		],
+		"description": "The following snippet replaces the value of paymentInfo: cash is replaced with POS;online is replaced with WEB_DESKTOP;any other value is replaced with UNKNOWN"
+	},
+
+	"Data transformation replace string": {
+		"prefix": "data transformation replace string ",
+		"body": [
+			"{{ root[\"g:sale_price\"]|replace(\" USD\", \"\") }}"
+		],
+		"description": "The following snippet takes the value of g:sale_price and replaces USD with an empty string, for example 256 USD becomes 256."
+	},
+
+	"Data transformation fill in empty values": {
+		"prefix": "data transformation fill in empty values ",
+		"body": [
+			"{%- if not root['paymentInfo'] -%}foo{%- else -%}{{root['paymentInfo']}}{%- endif -%}"
+		],
+		"description": "If a cell has no value (is empty), you can insert a value. The following snippet replaces a missing value of paymentInfo with foo"
+	},
+
+	"Data transformation event salt": {
+		"prefix": "data transformation event salt ",
+		"body": [
+			"{{root.orderId}}{{root.eventTimestamp}}"
+		],
+		"description": "Select two or more parameters whose combination is unique. For example, you can use orderID and eventTimestamp. Even if one of them repeats for some reason, the chances of both being identical between two events are practically zero. Add an eventSalt column. In the eventSalt column, add the following insert (example according to step 1)"
+	},
+
+	"Data transformation calculate revenue": {
+		"prefix": "data transformation calculate revenue ",
+		"body": [
+			"{% set line_sums = [0] %}",
+			"{%- for prod in root.products -%}",
+				"\t{%- if line_sums.append(prod[\"productQuantity\"]|int*prod[\"finalUnitPriceAmount\"]|replace(\",\", \".\")|float) -%}",
+				"\t{%- endif -%}",
+			"{%- endfor -%}",
+			"{{ line_sums|sum }}"
+		],
+		"description": "The following code uses the values from the productQuantityProduct and finalUnitPriceAmount to calculate the total value of an order. The actual code must not include any line breaks, the example uses them for better readability."
+	},
+
+	"Catalog": {
+		"prefix": "catalog",
+		"body": [
+			"{% catalog.${1:catalogName}(${2:itemKey}).${3:columnName} %}"
+		],
+		"description": "Catalog Block"
+	},
+
+	"Catalogvar": {
+		"prefix": "catalogvar",
+		"body": [
+			"{% catalogvar.${1:catalogName}(${2:itemKey}).${3:columnName} %}",
+			"\t{{ catalog_result }}",
+			"{% endcatalogvar %}"
+		],
+		"description": "Catalogvar Block"
+	},
+	
+	"Catalogitemv2": {
+		"prefix": "catalogitemv2",
+		"body": [
+			"{% set key = '${1:itemKey}' %}",
+			"{% catalogitemv2.catalogName(key) allowEmpty=${2:True/False} %}",
+				"\t{% set object = catalog_result %}",
+				"\t{{ object.get('${3:objectColumn}').${4:propertyName} }}",
+				"\t{{ object.get('${5:stringColumn}') }}",
+			"{% endcatalogitemv2 %}"
+		],
+		"description": "Catalogvar Block"
+	},
+
+	"Metrics": {
+		"prefix": "metrics",
+		"body": [
+			"{% metrics %} ${1:metrics-hash} {% endmetrics %}"
+		],
+		"description": "Metrics Block"
+	},
+
+	"Metricsvar": {
+		"prefix": "metricsvar",
+		"body": [
+			"{% metricsvar metric_id:${1:metrics-hash} %}",
+				"\t{{ metric_result }}",
+			"{% endmetricsvar %}"
+		],
+		"description": "Metrics Block"
+	},
+
+	"Attribute": {
+		"prefix": "customer attribute",
+		"body": [
+			"{% customer ${1:attr-name} %}",
+			"{% customer.${1:attr-name} %}",
+			"{% customer['${1:attr-name}'] %}"
+		],
+		"description": "Customer attribute"
+	},
+
+	"Attribute With Condition": {
+		"prefix": "customer attribute with condition",
+		"body": [
+			"{%- if customer.get('${1:attr-name}') -%}",
+				"\t{{ customer.${1:attr-name} }}",
+			"{%- else -%}",
+				"\t${2:value}",
+			"{%- endif -%}"
+		],
+		"description": "Customer Attribute with Condition"
+	},
+
+	"Voucher": {
+		"prefix": "voucher",
+		"body": [
+			"{% voucher %} ${1:pool-id} {% endvoucher %}"
+		],
+		"description": "Voucher Block"
+	},
+
+	"Voucher With Assign": {
+		"prefix": "voucher with assign",
+		"body": [
+			"{% voucher assign=false%} ${1:pool-id} {% endvoucher %}"
+		],
+		"description": "Voucher Block with Assign"
+	},
+
+	"VoucherVar": {
+		"prefix": "vouchervar",
+		"body": [
+			"{% vouchervar id=${1:pool-id} %}",
+				"\t{{ voucher_result }}",
+			"{% endvouchervar %}"
+		],
+		"description": "Vouchervar Block"
+	},
+
+	"BarcodesAsImg": {
+		"prefix": "barcodes as image",
+		"body": [
+			"{% vouchervar id=${1:pool-id} %}",
+				"\t{% barcode code= {{voucher_result}}, gray=true, type=EAN_13, hrp=BOTTOM %}",
+			"{% endvouchervar %}"
+		],
+		"description": "Bardcode Block as Image"
+	},
+
+	"BarcodesAsUrl": {
+		"prefix": "barcodes as url",
+		"body": [
+			"{% vouchervar id=${1:pool-id} %}",
+				"\t{% barcodeurl code= {{voucher_result}}, gray=true, type=EAN_13, hrp=BOTTOM %}",
+			"{% endvouchervar %}"
+		],
+		"description": "Bardcode Block as Url"
+	},
+
+	"StopCommunicationFromRendering": {
+		"prefix": "stop",
+		"body": [
+			"{% kill %}"
+		],
+		"description": "Stop communication from rendering"
+	},
+
+	"If Statement Tag": {
+		"prefix": "if statement",
+		"body": [
+			"{% set ${1:attr} = '${2:value}' %}",
+			"{%- if ${1:attr} -%}",
+				"\t{{ ${1:attr} }}",
+			"{%- endif -%}"
+		],
+		"description": "If Statement"
+	},
+
+	"If Statement Tag Simple": {
+		"prefix": "if statement simple",
+		"body": [
+			"{%- if ${1:value} -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "If Statement simple"
+	},
+
+	"If Else Statement Tag": {
+		"prefix": "if else statement",
+		"body": [
+			"{% set ${1:attr} = '${2:value}' %}",
+			"{%- if ${1:attr} -%}",
+				"\t{{ ${1:attr} }}",
+			"{%- else -%}",
+				"\t${2:value}",
+			"{%- endif -%}"
+		],
+		"description": "If Else Statement"
+	},
+
+	"If ElIf Statement Tag": {
+		"prefix": "if elif statement",
+		"body": [
+			"{% set number = ${1:value} %}",
+			"{%- if number <= ${2:value} -%}",
+				"\t{{ number }}",
+			"{%- elif number <= ${3:value} -%}",
+				"\t{{ number }}",
+			"{%- else -%}",
+				"\t{{ number }}",
+			"{%- endif -%}"
+		],
+		"description": "If with Elif Statement"
+	},
+
+	"If Else Statement ? Tag": {
+		"prefix": "if elif statement",
+		"body": [
+			"{% set temp = true %}",
+			"{% set temp2 = false %}",
+			"{{ 'Update' if temp else 'Continue' }}<br>"
+		],
+		"description": "If else Tag"
+	},
+
+	"Append Tag": {
+		"prefix": "append tag",
+		"body": [
+			"{% do ${1:listname}.append('${2:string}')}"
+		],
+		"description": "You can use do append to add an item to a list."
+	},
+
+	"AutoEscape Tag": {
+		"prefix": "autoEscape tag",
+		"body": [
+			"{%- autoescape -%}",
+				"\t<!--Code to escape-->",
+			"{%- endautoescape -%}"
+		],
+		"description": "Autoescape the tag’s contents."
+	},
+
+	"Call Tag": {
+		"prefix": "call tag",
+		"body": [
+			"{%- macro render_dialog(title, class=\"dialog\") -%}",
+				"\t<div class=\"{{ class }}\">",
+					"\t\t<h2>{{ title }}</h2>",
+					"\t\t<div class=\"contents\">",
+						"\t\t\t{{ caller() }}",
+					"\t\t</div>",
+				"\t</div>",
+			"{%- endmacro -%}",
+			"",
+			"{%- call render_dialog('Hello World') -%}",
+				"\tThis is a simple dialog rendered by using a macro and a call block.",
+			"{%- endcall -%}"
+		],
+		"description": "In some cases, it can be useful to pass a macro to another macro."
+	},
+
+	"Cycle Tag": {
+		"prefix": "cycle tag",
+		"body": [
+			"{% set contents = [] %}",
+			"{%- for content in contents -%}",
+				"\t<div class=\"post-item {% cycle 'odd','even' %}\">",
+					"\t\tBlog post content",
+				"\t</div>",
+			"{- endfor -}"
+		],
+		"description": "The cycle tag can be used within a for loop to cycle through a series of string values and print them with each iteration."
+	},
+
+	"For Tag": {
+		"prefix": "for tag",
+		"body": [
+			"{% set names = ['John', 'Kate', 'Bob'] %}",
+			"{%- for item in names -%}",
+				"\tHello, {{ item }}!",
+			"{%- endfor -%}"
+		],
+		"description": "Outputs the inner content for each item in the given iterable."
+	},
+
+	"For Loop variables Tag": {
+		"prefix": "for variables tag",
+		"body": [
+			"{% set array = ['q','w','e','r','t'] %}",
+			"{%- for item in array -%}",
+				"\tItem: {{ item }}",
+				"\tIndex: {{ loop.index }}",
+				"\tRevindex: {{ loop.revindex }}",
+				"\tCycle: {{ loop.cycle('foo','bar','baz') }}",
+			"{%- endfor -%}"
+		],
+		"description": "Inside the for loop, you can access special variables."
+	},
+
+	"Ifchanged Tag": {
+		"prefix": "ifchanged tag",
+		"body": [
+			"{%- ifchanged variable -%}",
+				"\t<!-- Code to execute if the variable has changed -->",
+			"{%- endifchanged -%}"
+		],
+		"description": "Outputs the tag contents if the given variable has changed since a prior invocation of this tag."
+	},
+
+	"Macro Tag": {
+		"prefix": "macro tag",
+		"body": [
+			"<!-- Defining the macro -->",
+			"{%- macro name_of_macro(argument_name, argument_name2) -%}",
+				"\t{{ argument_name }}",
+				"\t{{ argument_name2 }}",
+			"{%- endmacro -%}",
+			"",
+			"<!-- Calling the macro -->",
+			"{{ name_of_macro('value to pass to argument 1', 'value to pass to argument 2') }}",
+			"",
+			"<!-- The macro can then be called like a function. -->",
+			"a { {{ name_of_macro('all', '2s ease-in-out') }} }"
+		],
+		"description": "Macros allow you to print multiple statements with a dynamic value or values."
+	},
+
+	"Print Tag": {
+		"prefix": "print tag",
+		"body": [
+			"{% set string_to_echo = 'Print me' %}",
+			"",
+			"{% print string_to_echo %}",
+			"{% print -65|abs %}"
+		],
+		"description": "Echoes the result of the expression."
+	},
+
+	"Range Tag": {
+		"prefix": "range tag",
+		"body": [
+			"range(start,stop,step)",
+			"",
+			"{% set foo=range(10,2,-2) %}",
+			"{{foo}}",
+			"",
+			"<!-- OUTPUT: -->",
+			"<!--[10, 8, 6, 4]-->"
+		],
+		"description": "Generates an array of integers. The array can’t be longer than 1000 items."
+	},
+
+	"Raw Tag": {
+		"prefix": "raw tag",
+		"body": [
+			"{% raw %}",
+				"\tThe personalization token for a contact's first name is {{ customer.firstname }}",
+			"{% endraw %}"
+		],
+		"description": "Processes all inner expressions as plain text."
+	},
+
+	"Unless Tag": {
+		"prefix": "unless tag",
+		"body": [
+			"{%- unless x < 0 -%}",
+				"\tx is greater than zero",
+			"{%- endunless -%}"
+		],
+		"description": "Unless is a conditional just like ‘if’, but works on an inverse logic."
+	},
+
+	"Update Tag": {
+		"prefix": "update tag",
+		"body": [
+			"{% set product = {'category':'sneakers'} %}",
+			"{% set colorData = {'color':'red','size': 8} %}",
+			"{% do product.update(colorData) %}"
+		],
+		"description": "Creates or updates the properties of an object."
+	},
+
+	"Test IsContainingAll": {
+		"prefix": "test IsContainingAll",
+		"body": [
+			"{{ [${1:values}] is containingall [${2:values}] }}"
+		],
+		"description": "IsContainingAll Test - Returns true if a list contains all the values from another list."
+	},
+
+	"Test IsContaining": {
+		"prefix": "test IsContaining ",
+		"body": [
+			"{{ [${1:values}] is containing ${2:value} }}"
+		],
+		"description": "IsContaining Test - Returns true if a list contains the provided value."
+	},
+
+	"Test IsDefined": {
+		"prefix": "test IsDefined ",
+		"body": [
+			"{%- if ${1:value} is defined -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsDefined Test - Returns true if the variable is defined."
+	},
+
+	"Test IsDivisibleBy": {
+		"prefix": "test IsDivisibleBy ",
+		"body": [
+			"{%- if ${1:value} is divisbleby 5 -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsDivisibleBy Test - Returns true if a variable is divisible by a number."
+	},
+
+	"Test IsEqualTo": {
+		"prefix": "test IsEqualTo ",
+		"body": [
+			"{%- if ${1:value} is equalto ${2:value} -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsEqualTo Test - Returns true if an object has the same value as another object."
+	},
+
+	"Test IsEven": {
+		"prefix": "test IsEven ",
+		"body": [
+			"{%- if ${1:value} is even -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsEven Test - Returns true if a value is an even number."
+	},
+
+	"Test IsIterable": {
+		"prefix": "test IsIterable ",
+		"body": [
+			"{%- if ${1:value} is iterable -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsIterable Test - Returns true if the object is iterable (for example, a sequence)."
+	},
+
+	"Test IsLower": {
+		"prefix": "test IsLower",
+		"body": [
+			"{%- if ${1:value} is lower -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsLower Test - Returns true if a string is all lowercase."
+	},
+
+	"Test IsMapping": {
+		"prefix": "test IsMapping",
+		"body": [
+			"{%- if ${1:value} is mapping -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsMapping Test - Returns true if an object is a dictionary."
+	},
+
+
+	"Test IsNumber": {
+		"prefix": "test IsNumber",
+		"body": [
+			"{%- if ${1:value} is number -%}",
+			"\t{{ ${1:value} * 1000000 }}",
+			"{%- endif -%}"
+		],
+		"description": "IsNumber Test - Returns true if the object is a number."
+	},
+
+
+	"Test IsOdd": {
+		"prefix": "test IsOdd",
+		"body": [
+			"{%- if ${1:value} is odd -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsOdd Test - Returns true if a number is an odd number."
+	},
+
+	"Test IsSameAs": {
+		"prefix": "test IsSameAs",
+		"body": [
+			"{%- if ${1:value} is sameas ${2:value} -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsSameAs Test - Returns true if a variable points at same object as another variable."
+	},
+
+	"Test IsSequence": {
+		"prefix": "test IsSequence",
+		"body": [
+			"{%- if ${1:value} is sequence -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsSequence Test = Returns true if the variable is a sequence. Sequences are variables that are iterable."
+	},
+
+	"Test IsStringContaining": {
+		"prefix": "test IsStringContaining",
+		"body": [
+			"{%- if ${1:value} is string_containing '${2:value}' -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsStringContaining Test - Returns true if an object is a string which contains a specified other string."
+	},
+
+	"Test IsString": {
+		"prefix": "test IsString",
+		"body": [
+			"{%- if ${1:value} is string' -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsString Test - Returns true if an object is a string."
+	},
+	
+	"Test IsStringStartingWith": {
+		"prefix": "test IsStringStartingWith",
+		"body": [
+			"{%- if ${1:value} string_startingwith '${2:value}' -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsStringStartingWith Test - Returns true if an object is a string which starts with a specified other string."
+	},
+
+	"Test IsTruthy": {
+		"prefix": "test IsTruthy",
+		"body": [
+			"{%- if ${1:value} is truthy -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsTruthy Test - Returns true if a value is truthy. Truthy means not 0, false,null, or an empty string (a string that consists exclusively of whitespaces is not considered empty)."
+	},
+
+	"Test IsUndefined": {
+		"prefix": "test IsUndefined",
+		"body": [
+			"{%- if ${1:value} is undefined -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsUndefined Test - Returns true if an object is undefined."
+	},
+
+	"Test IsUpper": {
+		"prefix": "test IsUpper",
+		"body": [
+			"{%- if ${1:value} is upper -%}",
+			"\t",
+			"{%- endif -%}"
+		],
+		"description": "IsUpper Test - Returns true if a string is all uppercase."
+	},
+
+	"Test IsWithin": {
+		"prefix": "test IsWithin",
+		"body": [
+			"{{${1:value} is within [${2:values}] }}"
+		],
+		"description": "IsWithin Test - Returns true if a value is contained in a list."
+	},
+
+	"Filter Abs": {
+		"prefix": "filter Abs",
+		"body": [
+			"{% set my_number = ${1:number} %}",
+			"{{ my_number|abs }}"
+		],
+		"description": "Abs Filter - Returns the absolute value of the argument."
+	},
+
+	"Filter Add": {
+		"prefix": "filter Add",
+		"body": [
+			"{% set my_number = ${1:number} %}",
+			"{{ my_num|add(${2:number}) }}"
+		],
+		"description": "Add Filter - Adds a number to the existing value."
+	},
+
+	"Filter Attr": {
+		"prefix": "filter Attr",
+		"body": [
+			"{{ content|attr('${1:absolute_url}') }}"
+		],
+		"description": "Attr Filter - Renders the attribute of a dictionary."
+	},
+
+	"Filter Base64 encode/decode": {
+		"prefix": "filter Base64 encode/decode",
+		"body": [
+			"{% set foo = '${1:example@synerise.com}'|base64Encode %}",
+			"{{ foo }}",
+			"\t",
+			"{% set baz = foo|base64Decode %}",
+			"{{ baz }}"
+		],
+		"description": "Base64 encode/decode Filter - You can encode/decode values with base64."
+	},
+
+	"Filter Batch": {
+		"prefix": "filter Batch",
+		"body": [
+			"{% set items=[${1:1, 2, 3, 4, 5}] %}",
+			"<table>",
+				"\t{%- for row in items|batch(${2:3}, '${3:xxx}') -%}",
+				"\t\t<tr>",
+					"\t\t\t{%- for column in row -%}",
+					"\t\t\t\t<td>{{ column }}</td>",
+					"\t\t\t{%- endfor -%}",
+				"\t\t</tr>",
+				"\t{%- endfor -%}",
+			"</table>"
+		],
+		"description": "A filter that divides items in a list into groups."
+	},
+
+	"Filter Bool": {
+		"prefix": "filter Bool",
+		"body": [
+			"{%- if "true"|bool == true -%}",
+				"\thello world",
+			"{%- endif -%}"
+		],
+		"description": "Bool Filter - Converts a value into a boolean."
+	},
+
+	"Filter Capitalize": {
+		"prefix": "filter Capitalize",
+		"body": [
+			"{% set sentence = '${1:the first letter of a sentence should always be capitalized.}' %}",
+			"{{ sentence|capitalize }}"
+		],
+		"description": "Capitalize Filter - Capitalizes a value. The first character will be uppercase, all others lowercase."
+	},
+
+	"Filter Center": {
+		"prefix": "filter Center",
+		"body": [
+			"<pre>",
+				"\t{% set var = '${1:string to center}' %}",
+				"\t{{ var|center(${2:80}) }}",
+			"</pre>"
+		],
+		"description": "Center Filter - Uses whitespace to center the value in a field of a given width. This filter will only work in tags where whitespace is retained, such as <pre>."
+	},
+
+	"Filter Count": {
+		"prefix": "filter Count",
+		"body": [
+			"{% set services = [${1:'Web design', 'SEO', 'Inbound Marketing', 'PPC'}] %}",
+			"{{ services|count }}"
+		],
+		"description": "Count Filter - Returns the number of items in a sequence or mapping."
+	},
+
+	"Filter Cut": {
+		"prefix": "filter Cut",
+		"body": [
+			"{% set my_string = '${1:Hello world.}' %}",
+			"{{ my_string|cut('${2: world}') }}"
+		],
+		"description": "Cut Filter - Removes a string from the value of another string."
+	},
+
+	"Filter DateTime or DatetimeFormat": {
+		"prefix": "filter DateTime or DatetimeFormat",
+		"body": [
+			"{{ iso_date|iso8601_to_time|datetimeformat('%a, %B %d') }}",
+			"{{ timestamp|timestamp_to_time|datetimeformat('%a, %B %d') }}",
+			"\t",
+			"{%set day =iso_date|iso8601_to_time|datetimeformat('%d')%}",
+			"{%set dayWeek =iso_date|iso8601_to_time|datetimeformat('%w')%}",
+			"{% set today = timestamp|timestamp_to_time|datetimeformat('%Y-%m-%d %H:%M:%S', tz=\"Europe/Warsaw\" ) %}",
+			"{{day}}",
+			"{{dayWeek}}",
+			"{{today}}"
+		],
+		"description": "DateTime or DatetimeFormat Filter - Formats a date object."
+	},
+
+	"Filter Default": {
+		"prefix": "filter Default",
+		"body": [
+			"{{ my_variable|default('my_variable is not defined') }}",
+			"{{ ''|default('the string was empty', true) }}"
+		],
+		"description": "Default Filter - If the value is undefined, it returns the passed default value, otherwise the value of the variable."
+	},
+
+	"Filter DictSort": {
+		"prefix": "filter DictSort",
+		"body": [
+			"{%- for item in contact|dictsort(false, 'value') -%}",
+			"\t{{ item }}",
+			"{%- endfor -%}"
+		],
+		"description": "DictSort Filter - Sorts a dict and returns key-value pairs."
+	},
+
+	"Filter Divide": {
+		"prefix": "filter Divide",
+		"body": [
+			"{% set my_number = ${1:106} %}",
+			"{{ my_number|divide(${2:2}) }}"
+		],
+		"description": "Divide Filter - Divides the current value by a divisor."
+	},
+
+	"Filter Divisible": {
+		"prefix": "filter Divisible",
+		"body": [
+			"{% set num = ${1:10} %}",
+			"{%- if num|divisible(${2:10}) -%}",
+				"\tThe number is divisible by ${2:2}",
+			"{%- endif -%}"
+		],
+		"description": "Divisible Filter - Evaluates to true if the value is divisible by the divisor provided in the parameter."
+	},
+
+	"Filter Escape": {
+		"prefix": "filter Escape",
+		"body": [
+			"{% set escape_string = '<div>This markup is printed as text</div>' %}",
+			"{{ escape_string|escape }}"
+		],
+		"description": "Escape Filter - Converts the characters &, <, >, ‘,, and ” in a string to HTML-safe sequences. Use this filter if you need to display text that might contain such characters in HTML. Marks the return value as a markup string."
+	},
+
+
+	"Filter Escape_jinjava": {
+		"prefix": "filter Escape_jinjava",
+		"body": [
+			"{% set escape_string = '{{This markup is printed as text}}' %}",
+			"{{ escape_string|escape_jinjava }}"
+		],
+		"description": "Escape_jinjava Filter - Converts the characters { and } in strings to Jinjava-safe sequences. Use this filter if you need to display text that might contain such characters in Jinjava. Marks the return value as a markup string."
+	},
+
+	"Filter EscapeJs": {
+		"prefix": "filter EscapeJs",
+		"body": [
+			"{% set escape_string = 'This string can safely be inserted into JavaScript' %}",
+			"{{ escape_string|escapejs }}"
+		],
+		"description": "EscapeJs Filter - Escapes strings so that they can be safely inserted into a JavaScript variable declaration."
+	},
+
+	"Filter EscapeJson": {
+		"prefix": "filter EscapeJson",
+		"body": [
+			"{% set escape_string = 'String that contains JavaScript' %}",
+			"{{ escape_string|escapejson }}"
+		],
+		"description": "EscapeJson Filter - Escapes strings so that they can be used as JSON values."
+	},
+
+	"Filter FileSizeFormat": {
+		"prefix": "filter FileSizeFormat",
+		"body": [
+			"{% set bytes = ${1:100000} %}",
+			"{{ bytes|filesizeformat }}"
+		],
+		"description": "FileSizeFormat Filter - Formats raw file size in bytes into a human-readable format (for example, “13 kB”, “4.1 MB”, “102 bytes”, and so on)."
+	},
+
+	"Filter First": {
+		"prefix": "filter First",
+		"body": [
+			"{% set my_sequence = [${1:'Item 1', 'Item 2', 'Item 3'}] %}",
+			"{{ my_sequence|first }}"
+		],
+		"description": "First Filter - Returns the first item of a sequence."
+	},
+
+	"Filter Float": {
+		"prefix": "filter Float",
+		"body": [
+			"{% set my_text = '${1:25.3}' %}",
+			"{{ my_text|float }}"
+		],
+		"description": "Float Filter - Converts the value into a floating point number."
+	},
+
+	"Filter ForceEscape": {
+		"prefix": "filter ForceEscape",
+		"body": [
+			"{% set escape_string = '<div>This markup is printed as text</div>' %}",
+			"{{ escape_string|forceescape }}"
+		],
+		"description": "ForceEscape Filter - Enforces HTML escaping."
+	},
+
+	"Filter Format": {
+		"prefix": "filter Format",
+		"body": [
+			"{{ 'Hi %s %s'|format('Hello', 'World!') }}"
+		],
+		"description": "Format Filter - Applies Python string formatting to an object."
+	},
+
+	"Filter fromjson": {
+		"prefix": "filter fromjson",
+		"body": [
+			"{% set y = \"{'dataX':'b'}\" %}",
+			"{% set deserialized = y|fromjson %}"
+		],
+		"description": "fromjson Filter - Deserializes data from a JSON string."
+	},
+
+	"Filter GroupBy": {
+		"prefix": "filter GroupBy",
+		"body": [
+			"<ul>",
+			"\t{%- for group in contents|groupby('gender') -%}",
+			"\t\t<li>",
+				"\t\t{{ group.grouper }}",
+				"\t\t\t<ul>",
+				"\t\t\t\t{%- for content in group.list -%}",
+					"\t\t\t\t\t<li>",
+						"\t\t\t\t\t\t{{ content.name }}",
+					"\t\t\t\t\t</li>",
+				"\t\t\t\t{%- endfor -%}",
+				"\t\t\t</ul>",
+			"\t\t</li>",
+			"\t{%- endfor -%}",
+		"</ul>"
+		],
+		"description": "GroupBy Filter - Groups a sequence of objects by a common attribute."
+	},
+
+	"Filter Hash": {
+		"prefix": "filter Hash",
+		"body": [
+			"{% set foo = '${1:example@synerise.com}'|hash('SHA-256') %}",
+			"{{ foo }}"
+		],
+		"description": "Hash Filter - Returns the SHA-256 hash of a string."
+	},
+
+	"Filter Indent": {
+		"prefix": "filter Indent",
+		"body": [
+			"<pre>",
+			"\t{% set var = 'string to indent' %}",
+			"\t{{ var|indent(2, true) }}",
+		"</pre>"
+		],
+		"description": "Indent Filter - Uses whitespace to indent a string."
+	},
+
+	"Filter Int": {
+		"prefix": "filter Int",
+		"body": [
+			"{% set my_text = '${1:23}' %}",
+			"{{ my_text|int }}"
+		],
+		"description": "Int Filter - Converts the value into an integer."
+	},
+
+	"Filter Join": {
+		"prefix": "filter Join",
+		"body": [
+			"{{ [1, 2, 3]|join('|') }}",
+			"{% set users = [",
+				"\t{username: 'Anne',age: 21},",
+				"\t{username: 'Violer',age: 25}",
+			"]%}",
+			"{{ users|join('|', attribute='username') }}"
+		],
+		"description": "Join Filter - Returns a string which is the concatenation of the values in the sequence."
+	},
+
+	"Filter Last": {
+		"prefix": "filter Last",
+		"body": [
+			"{% set my_sequence = [${1:'Item 1', 'Item 2', 'Item 3'}] %}",
+			"{{ my_sequence|last }}"
+		],
+		"description": "Last Filter - Returns the last item of a sequence."
+	},
+
+	"Filter Length": {
+		"prefix": "filter Length",
+		"body": [
+			"{% set services = [${1:'Web design', 'SEO', 'Inbound Marketing', 'PPC'}] %}",
+			"{{ services|length }}"
+		],
+		"description": "Length Filter - Returns the number of items in a sequence or mapping."
+	},
+
+	"Filter List": {
+		"prefix": "filter List",
+		"body": [
+			"{% set one = 1 %}",
+			"{% set two = 2 %}",
+			"{% set three = 3 %}",
+			"{% set list_num = one|list + two|list + three|list %}",
+			"",
+			"{{ list_num|list }}"
+		],
+		"description": "List Filter - Converts the value into a list. If it was a string, the returned list will be a list of characters."
+	},
+
+	"Filter Lower": {
+		"prefix": "filter Lower",
+		"body": [
+			"{{ '${1:Text to MAKE Lowercase}'|lower }}"
+		],
+		"description": "Lower Filter - Converts a value to lowercase."
+	},
+
+	"Filter Map": {
+		"prefix": "filter Map",
+		"body": [
+			"{% set users = [",
+				"\t{username: 'Anne',age: 21},",
+				"\t{username: 'Violer',age: 25}",
+			"]%}",
+			"Users on this page: {{ users|map(attribute='username')|join(', ') }}",
+			"",
+			"{% set seq = ['item1', 'item2', 'item3'] %}",
+			"{{ seq|map('upper') }}"
+		],
+		"description": "Map Filter - Applies a filter on a sequence of objects or looks up an attribute."
+	},
+
+	"Filter Md5": {
+		"prefix": "filter Md5",
+		"body": [
+			"{{ content.absolute_url|md5 }}"
+		],
+		"description": "Md5 Filter - Calculates the MD5 hash of the given object."
+	},
+	
+	"Filter Multiply": {
+		"prefix": "filter Multiply",
+		"body": [
+			"{% set n = ${1:20} %}",
+			"{{ n|multiply(${2:3}) }}"		
+		],
+		"description": "Multiply Filter - Multiplies the current object with the given multiplier."
+	},
+
+
+	"Filter PrettyPrint": {
+		"prefix": "filter PrettyPrint",
+		"body": [
+			"{% set this_var = 'Variable that I want to debug' %}",
+			"{{ this_var|pprint }}"			
+		],
+		"description": "PrettyPrint Filter - Pretty print a variable. Useful for debugging."
+	},
+
+	"Filter Random": {
+		"prefix": "filter Random",
+		"body": [
+			"{% set contents = [1,2,4,5] %}",
+			"{%- for content in contents|random -%}",
+				"\t{{content}}",
+			"{%- endfor -%}"		
+		],
+		"description": "Random Filter - Returns a random item from the sequence."
+	},
+
+	"Filter Reject": {
+		"prefix": "filter Reject",
+		"body": [
+			"{% set some_numbers = [${1:10, 12, 13, 3, 5, 17, 22}] %}",
+			"{% some_numbers|reject('even') %}"	
+		],
+		"description": "Reject Filter - Filters a sequence of objects by applying a test to the objects and excluding the ones that match the test."
+	},
+
+	"Filter RejectAttr": {
+		"prefix": "filter RejectAttr",
+		"body": [
+			"{%- for content in contents|rejectattr('post_list_summary_featured_image') -%}",
+				"\t<div class=\"post-item\">Post in listing markup</div>",
+			"{%- endfor -%}"
+		],
+		"description": "RejectAttr Filter - Filters a sequence of objects by applying a test to an attribute of an object and rejecting the objects that match the test."
+	},
+
+	"Filter Replace": {
+		"prefix": "filter Replace",
+		"body": [
+			"{{ 'Hello World'|replace('Hello', 'Goodbye') }}",
+			"{{ 'aaaaargh'|replace('a', 'doh, ', 2) }}"
+		],
+		"description": "Replace Filter - Returns a copy of the value with all occurrences of a substring replaced with a new one. The first argument is the substring that should be replaced, the second is the replacement string. If the optional third argument count is given, only the first count occurrences are replaced."
+	},
+
+	
+	"Filter Reverse": {
+		"prefix": "filter Reverse",
+		"body": [
+			"{% set nums = [${1:1, 2, 3, 4, 5, 6, 7, 8, 9, 10}] %}",
+			"{%- for num in nums|reverse -%}",
+				"\t{{ num }}",
+			"{%- endfor -%}"
+		],
+		"description": "Reverse Filter - Reverses the object or returns an iterator that iterates over it the other way round."
+	},
+	
+	"Filter Round": {
+		"prefix": "filter Round",
+		"body": [
+			"{{ ${1:42.55}|round }}",
+			"{{ ${1:42.55}|round(1, 'floor') }}",
+			"{{ ${1:42.55}|round|int }}"
+		],
+		"description": "Round Filter - Rounds the number to a given precision."
+	},
+
+	"Filter Safe": {
+		"prefix": "filter Safe",
+		"body": [
+			"{{ content.post_list_content|safe }}"
+		],
+		"description": "Safe Filter - Marks the value as safe, which means that in an environment with automatic escaping enabled, this variable will not be escaped."
+	},
+
+	"Filter Select": {
+		"prefix": "filter Select",
+		"body": [
+			"{% set some_numbers = [${1:10, 12, 13, 3, 5, 17, 22}] %}",
+			"{{ some_numbers|select('even') }}"
+		],
+		"description": "Select Filter - Filters a sequence of objects by applying a test to the objects and only returning the ones that match the test."
+	},
+
+
+	"Filter SelectAttr": {
+		"prefix": "filter SelectAttr",
+		"body": [
+			"{%- for content in contents|selectattr('post_list_summary_featured_image') -%}",
+				"\t<div class=\"post-item\">{{content}}</div>",
+			"{%- endfor -%}"
+		],
+		"description": "SelectAttr Filter - Filters a sequence of objects by applying a test to an attribute of an object and returning only the objects that match the test."
+	},
+
+	"Filter Shuffle": {
+		"prefix": "filter Shuffle",
+		"body": [
+			"{%- for content in ['a','b','c','d','e']|shuffle -%}",
+				"\t{{ content }}",
+			"{%- endfor -%}"
+		],
+		"description": "Shuffle Filter - Randomly shuffles a given list, returning a new list with all of the items of the original list in a random order."
+	},
+
+	"Filter Slice": {
+		"prefix": "filter Slice",
+		"body": [
+			"{% set items = ['laptops', 'tablets', 'smartphones', 'smart watches', 'TVs'] %}",
+			"<div class=\"columwrapper\">",
+				"\t{%- for column in items|slice(3) -%}",
+				"\t\t<ul class=\"column-{{ loop.index }}\">",
+					"\t\t\t{%- for item in column -%}",
+					"\t\t\t\t<li>{{ item }}</li>",
+					"\t\t\t{%- endfor -%}",
+				"\t\t</ul>",
+				"\t{%- endfor -%}",
+			"</div>"
+		],
+		"description": "Slice Filter - Slices an iterator and returns a list of lists containing those items."
+	},
+
+	"Filter Sort": {
+		"prefix": "filter Sort",
+		"body": [
+			"{%- for item in [4,7,1,9,3,4,7,2,8,4,5,6,7,9]|sort -%}",
+				"\t{{item}}",
+			"{%- endfor -%}"
+		],
+		"description": "Sort Filter - Sorts an iterable."
+	},
+
+	"Filter Split": {
+		"prefix": "filter Split",
+		"body": [
+			"{% set string_to_split = 'Stephen; David; Cait; Nancy; Mike; Joe; Niall; Tim; Amanda' %}",
+			"{% set names = string_to_split|split(';', 4) %}",
+			"",
+			"<ul>",
+				"\t{%- for name in names -%}",
+				"\t\t<li>{{ name }}</li>",
+				"\t{%- endfor -%}",
+			"</ul>"
+		],
+		"description": "Split Filter - Splits the input string into a list on the given separator."
+	},
+
+	"Filter String": {
+		"prefix": "filter String",
+		"body": [
+			"{% set number_to_string = 45 %}",
+			"{{ number_to_string|string }}"
+		],
+		"description": "String Filter - Returns the string value of an object."
+	},
+
+	"Filter StripTags": {
+		"prefix": "filter StripTags",
+		"body": [
+			"{% set some_html = '<div><strong>Some text</strong> </div>' %}",
+			"{{ some_html|striptags }}"
+		],
+		"description": "StripTags Filter - Strips SGML/XML tags and replaces adjacent whitespace by one space."
+	},
+
+	"Filter Sum": {
+		"prefix": "filter Sum",
+		"body": [
+			"{% set sum_this = [1, 2, 3, 4, 5] %}",
+			"{{ sum_this|sum }}",
+			"",
+			"{% set items = [{price: 12}, {price: 15}] %}",
+			"Total: {{ items|sum(attribute='price') }}"
+		],
+		"description": "Sum Filter - Returns the sum of a sequence of numbers plus the value of the start parameter (which defaults to 0). When the sequence is empty, it returns start."
+	},
+
+	"Filter Title": {
+		"prefix": "filter Title",
+		"body": [
+			"{% set Title_this = [1, 2, 3, 4, 5] %}",
+			"{{ Title_this|Title }}",
+			"",
+			"{% set items = [{price: 12}, {price: 15}] %}",
+			"Total: {{ items|Title(attribute='price') }}"
+		],
+		"description": "Title Filter - Returns a titlecased version of the value. Words will start with uppercase letters, all remaining characters are lowercase."
+	},
+
+	"Filter Tojson": {
+		"prefix": "filter tojson",
+		"body": [
+			"{% set x = {'dataX':'b'} %}",
+			"{% set x_to_json = x|tojson %}",
+			"",
+			"{% set object = {",
+				"\t'field1': 'value',",
+				"\t'field2': {",
+					"\t\t'subfield1': 1,",
+					"\t\t'subfield2': [",
+					"\t\t{'nestedObjectField1': 'value','nestedObjectField2': 1},",
+					"\t\t{'nestedObjectField1': 'value','nestedObjectField2': 2},",
+					"\t\t{'nestedObjectField1': 'value','nestedObjectField3': 3}",
+					"\t]}} %}",
+			"{% set x = object|tojson %}",
+			"{{x}}",
+			"",
+			"{% set qwe=[] %}",
+			"{% do qwe.append('123') %}",
+			"{% do qwe.append('456') %}",
+			"{% set transformed = qwe|tojson %}"
+
+		],
+		"description": "tojson Filter - Serializes data into a JSON string."
+	},
+
+	"Filter Trim": {
+		"prefix": "filter Trim",
+		"body": [
+			"{{ ' remove whitespace '|trim }}"
+		],
+		"description": "Trim Filter - Strips leading and trailing whitespace."
+	},
+
+	"Filter Truncate": {
+		"prefix": "filter Truncate",
+		"body": [
+			"{{ 'I only want to show the first sentence. Not the second.'|truncate(48, True) }}",
+			"<!-- I only want to show the first sentence. Not t... -->",
+			
+			"{{ 'I only want to show the first sentence. Not the second.'|truncate(48, False) }}",
+			"<!-- I only want to show the first sentence. Not... -->",
+			
+			"{{ 'I only want to show the first sentence. Not the second.'|truncate(35, True, '[...]') }}",
+			"<!-- I only want to show the first [...] -->"
+		],
+		"description": "Truncate Filter - Returns a truncated copy of the string. The length is specified with the first parameter, which defaults to 255. If the second parameter is true, the filter will cut the text exactly at the specified length. Otherwise, it will cut after the last complete word. If the text is actually truncated, the filter appends an ellipsis (…). If you want to replace the ellipsis with another string, provide that string as the third parameter."
+	},
+
+	"Filter TruncateHtml": {
+		"prefix": "filter TruncateHtml",
+		"body": [
+			"{{ '<p>I want to truncate this text without breaking my HTML<p>'|truncatehtml(20, '..', false) }}"
+		],
+		"description": "TruncateHtml Filter - Truncates a given string, respecting HTML markup (properly closes all nested tags)."
+	},
+
+	"Filter Unique": {
+		"prefix": "filter Unique",
+		"body": [
+			"{{ ['foo', 'bar', 'foo', 'other']|unique|join(', ') }}",
+			"",
+			"{% set contents = [",
+				"\t{slug: '123'},",
+				"\t{slug: '432'}",
+			"]%}",
+			"{%- for content in contents|unique(attr='slug') -%}",
+				"\t{{ content }}",
+			"{%- endfor -%}"
+		],
+		"description": "Unique Filter - Extracts a unique set from a sequence of objects."
+	},
+
+	"Filter UnixTimestamp": {
+		"prefix": "filter UnixTimestamp",
+		"body": [
+			"{% mydatetime|unixtimestamp %}"
+		],
+		"description": "UnixTimestamp Filter - Gets the UNIX timestamp value (in milliseconds) of a date object."
+	},
+
+	"Filter Between_times": {
+		"prefix": "filter Between_times",
+		"body": [
+			"{% set begin = \"2018-07-14T14:31:30+0530\"|strtotime(\"yyyy-MM-dd'T'HH:mm:ssZ\") %}",
+			"{% set end = \"2018-07-20T14:31:30+0530\"|strtotime(\"yyyy-MM-dd'T'HH:mm:ssZ\") %}",
+			"{{ begin|between_times(end, \"days\") }}"
+		],
+		"description": "Between_times Filter - Returns difference between two dates"
+	},
+
+	"Filter Upper": {
+		"prefix": "filter Upper",
+		"body": [
+			"{% mydatetime|Upper %}"
+		],
+		"description": "Upper Filter - Converts a value to uppercase."
+	},
+
+	"Filter UrlEncode": {
+		"prefix": "filter UrlEncode",
+		"body": [
+			"{{ 'Escape & URL encode this string'|urlencode }}"
+		],
+		"description": "UrlEncode Filter - Escapes strings for use in URLs (uses UTF-8 encoding). It accepts both dictionaries and regular strings, as well as pairwise iterables."
+	},
+
+	"Filter Urlize": {
+		"prefix": "filter Urlize",
+		"body": [
+			"{{ 'https://synerise.com'|urlize(40) }}",
+			"{{ 'https://synerise.com'|urlize(10, true, target='_blank') }}"
+		],
+		"description": "Urlize Filter - Converts URLs in plain text into clickable links."
+	},
+
+	"Filter WordCount": {
+		"prefix": "filter WordCount",
+		"body": [
+			"{%  set count_words = 'Count the number of words in this variable' %}",
+			"{{ count_words|wordcount }}"
+		],
+		"description": "WordCount Filter - Counts the words in the given string."
+	},
+
+	"Filter WordWrap": {
+		"prefix": "filter WordWrap",
+		"body": [
+			"<pre>",
+				"\t{{ 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'|wordwrap(10) }}",
+			"</pre>"
+		],
+		"description": "WordWrap Filter - Returns a copy of the string passed to the filter wrapped after a number of characters (79 by default)."
+	},
+
+	"Filter XmlAttr": {
+		"prefix": "filter XmlAttr",
+		"body": [
+			"{% set html_attributes = {\"class\": \"bold\", \"id\": \"sidebar\"} %}",
+			"<div{{ html_attributes|xmlattr(False) }}></div>",
+			"<div{{ html_attributes|xmlattr }}></div>"
+		],
+		"description": "XmlAttr Filter - Creates an HTML/XML attribute string based on the items in a dict."
+	},
+
+	"Filter Difference": {
+		"prefix": "filter Difference",
+		"body": [
+			"{% set list1 = [",
+				"\t{price: 10, id: 1},",
+				"\t{price: 10, id: 1},",
+				"\t{price: 15, id: 2},",
+				"\t{price: 35, id: 3}",
+			"] %}",
+			"",
+			"{% set list2 = [",
+				"\t{price: 10, id: 1},",
+				"\t{price: 20, id: 1},",
+				"\t{price: 15, id: 2}",
+			"] %}",
+			"",
+			"{{ list1|difference(list2) }}"
+		],
+		"description": "Difference Filter - Gives unique values of two arrays"
+	},
+
+	"Filter Union": {
+		"prefix": "filter Union",
+		"body": [
+			"{% set list1 = [",
+				"\t{price: 10, id: 1},",
+				"\t{price: 10, id: 1},",
+				"\t{price: 15, id: 2},",
+				"\t{price: 35, id: 3}",
+			"] %}",
+			"",
+			"{% set list2 = [",
+				"\t{price: 10, id: 1},",
+				"\t{price: 20, id: 1},",
+				"\t{price: 15, id: 2}",
+			"] %}",
+			"",
+			"{{ list1|union(list2) }}"
+		],
+		"description": "Union Filter - Union unique values of two arrays"
+	},
+
+	"Filter Intersect": {
+		"prefix": "filter Intersect",
+		"body": [
+			"{% set list1 = [",
+				"\t{price: 10, id: 1},",
+				"\t{price: 10, id: 1},",
+				"\t{price: 15, id: 2},",
+				"\t{price: 35, id: 3}",
+			"] %}",
+			"",
+			"{% set list2 = [",
+				"\t{price: 10, id: 1},",
+				"\t{price: 20, id: 1},",
+				"\t{price: 15, id: 2}",
+			"] %}",
+			"",
+			"{{ list1|intersect(list2) }}"
+		],
+		"description": "Intersect Filter - Shared values of two arrays"
+	},
+
+	"Send formData": {
+		"prefix": "formData",
+		"body": [
+			"SyneriseTC.sendFormData('${1:contact}', {",
+				"\t'lastname': 'Nowak',",
+				"\t'firstname': 'Jan',",
+				"\t'email': 'jan.nowak@synerise.com'",
+			"})"
+		],
+		"description": "Send Form Data in JavaScript"
+	},
+
+	"Send customEvent": {
+		"prefix": "trackCustomEvent",
+		"body": [
+			"SR.event.trackCustomEvent('${1:recommendations.generated}', {",
+				"\t'device': (SyneriseTC.os.mobile ? 'mobile' : 'desktop'),",
+				"\t'campaignType': 'personalizowane',",
+				"\t'placement': 'homepage',",
+				"\t'title': 'strona glowna - personalizowane',",
+			"}, 'Recommendations generated');"
+		],
+		"description": "Send Custom Event in JavaScript"
+	},
+
+	"Dynamic key": {
+		"prefix": "dynamic key in aggregate, recommendation",
+		"body": [
+			"{% set RECOMMENDATION_ID = '${1:w7aTOuJJ8COW}' %}",
+			"{% set aggregateId = '${2:6fe6f8ab-73e3-3a72-aec4-8db93cb55aa7}' %}",
+			"",
+			"{% aggregate {{aggregateId}} %}",
+				"\t{% for item in aggregate_result %}",
+					"\t\t{{item}}",
+				"\t{% endfor %}",
+			"{% endaggregate %}",
+			"",
+			"{% recommendations3 campaignId={{RECOMMENDATION_ID}} %}",
+				"\t{% for item in recommended_products3 %}",
+					"\t\t{{item}}",
+				"\t{% endfor %}",
+			"{% endrecommendations3 %}"
+		],
+		"description": "Dynamic key for aggregat and recommendation"
+	},
+	
+	"Format numbers": {
+		"prefix": "format number with spaces",
+		"body": [
+			"{{ '2341423'|reverse|list|batch(3)|map('join', '')|join(' ')|reverse }}"
+		],
+		"description": "Adding space beetwen thousands, hundreds"
+	}
+	
+}
