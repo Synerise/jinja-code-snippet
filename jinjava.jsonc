@@ -956,7 +956,7 @@
 	"Filter Bool": {
 		"prefix": "filter Bool",
 		"body": [
-			"{%- if "true"|bool == true -%}",
+			"{%- if 'true'|bool == true -%}",
 				"\thello world",
 			"{%- endif -%}"
 		],
