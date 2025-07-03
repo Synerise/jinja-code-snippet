@@ -1735,5 +1735,39 @@
 		],
 		"description": "Adding space beetwen thousands, hundreds"
 	}
+
+	  "Document": {
+	    "prefix": "Document",
+	    "description": "Inserts a reference to a document",
+	    "body": [
+	      "{% document slug %}"
+	    ]
+	  },
+	
+	  "Screen view collection": {
+	    "prefix": "Screen view collection",
+	    "description": "Inserts all documents added to the screen view definition",
+	    "body": [
+	      "{% screenviewcollection %}"
+	    ]
+	  },
+	
+	  "Snippet reference": {
+	    "prefix": "Snippet reference",
+	    "description": "Inserts a reference to a snippet",
+	    "body": [
+	      "{% snippet uuid %}"
+	    ]
+	  },
+	
+	  "Snippet Var": {
+	    "prefix": "Snippet as variable",
+	    "description": "Inserts a reference to a snippet as a variable",
+	    "body": [
+	      "{% snippetvar id=snippet-uuid %}",
+	      "{{ snippet_result }}",
+	      "{% endsnippetvar %}"
+	    ]
+	  }
 	
 }
